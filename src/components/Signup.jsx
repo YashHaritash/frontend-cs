@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); // Add state for name
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const navigate = useNavigate();
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Name:", name, "Email:", email, "Password:", password);
     try {
       const payload = {
         name,
@@ -35,22 +41,54 @@ const Signup = () => {
     }
   };
 
+  const lightTheme = {
+    backgroundColor: "#f8f9fa",
+    color: "#000",
+  };
+
+  const darkTheme = {
+    backgroundColor: "#121212",
+    color: "#e0e0e0",
+  };
+
+  const theme = isDarkMode ? darkTheme : lightTheme;
+
   return (
     <div
       className="d-flex justify-content-center align-items-center"
-      style={{ height: "80vh", backgroundColor: "#f8f9fa" }}
+      style={{
+        height: "calc(100vh - 56px)", // Assuming navbar height is 56px
+        ...theme,
+      }}
     >
-      <div className="card p-4" style={{ width: "300px" }}>
+      <div
+        className="card p-4"
+        style={{
+          width: "300px",
+          backgroundColor: isDarkMode ? "#1e1e1e" : "#fff",
+          color: theme.color,
+        }}
+      >
         <h2 className="text-center mb-4">Signup</h2>
+        {/* <button
+          onClick={toggleDarkMode}
+          className="btn btn-secondary mb-3"
+        >
+          Toggle {isDarkMode ? "Light" : "Dark"} Mode
+        </button> */}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
               type="text"
               className="form-control"
-              placeholder="Full Name"
+              placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              style={{
+                backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",
+                color: theme.color,
+              }}
             />
           </div>
           <div className="mb-3">
@@ -61,6 +99,10 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              style={{
+                backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",
+                color: theme.color,
+              }}
             />
           </div>
           <div className="mb-3">
@@ -71,9 +113,20 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              style={{
+                backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",
+                color: theme.color,
+              }}
             />
           </div>
-          <button type="submit" className="btn btn-primary w-100">
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+            style={{
+              backgroundColor: isDarkMode ? "#bb86fc" : "#007bff",
+              borderColor: isDarkMode ? "#bb86fc" : "#007bff",
+            }}
+          >
             Signup
           </button>
         </form>

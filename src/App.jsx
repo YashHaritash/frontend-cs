@@ -12,7 +12,7 @@ function App() {
       <Router>
         <NavBar />
         <Routes>
-          <Route path="/" element={<CodeEditor />} />
+          <Route path="/" element={<CodeEditor sessionId={1} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />

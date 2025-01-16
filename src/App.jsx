@@ -1,24 +1,33 @@
 import React from "react";
-import CodeEditor from "./components/CodeEditor";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
 import NavBar from "./components/NavBar";
 import About from "./components/About";
+import SessionManagement from "./components/SessionManagement";
+import CodeEditor from "./components/CodeEditor";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 function App() {
+  // Define onCreateSession function in App.js
+  const onCreateSession = () => {
+    // Logic for creating a new session
+    console.log("Creating new session...");
+  };
+
   return (
-    <>
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<CodeEditor sessionId={1} />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route
+          path="/"
+          element={<SessionManagement onCreateSession={onCreateSession} />}
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/editor/:sessionId" element={<CodeEditor />} />
+      </Routes>
+    </Router>
   );
 }
 

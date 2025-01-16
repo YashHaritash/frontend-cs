@@ -86,7 +86,7 @@ const Signup = () => {
               onChange={(e) => setName(e.target.value)}
               required
               style={{
-                backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",
+                backgroundColor: isDarkMode ? "gray" : "#fff",
                 color: theme.color,
               }}
             />
@@ -100,7 +100,7 @@ const Signup = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               style={{
-                backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",
+                backgroundColor: isDarkMode ? "gray" : "#fff",
                 color: theme.color,
               }}
             />

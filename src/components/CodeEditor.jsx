@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
+import { useParams } from "react-router-dom"; // Make sure you're using useParams to extract sessionId
 import io from "socket.io-client";
 
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 
-const CodeEditor = ({ sessionId }) => {
+const CodeEditor = () => {
+  const { sessionId } = useParams(); // Capture sessionId from the URL
   const [code, setCode] = useState("");
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Connect to the Socket.IO server
     const newSocket = io("http://localhost:3000");
     setSocket(newSocket);
 
@@ -22,7 +23,6 @@ const CodeEditor = ({ sessionId }) => {
       setCode(updatedCode);
     });
 
-    // Cleanup on component unmount
     return () => {
       newSocket.disconnect();
     };
@@ -30,7 +30,6 @@ const CodeEditor = ({ sessionId }) => {
 
   const handleCodeChange = (newCode) => {
     setCode(newCode);
-    // Emit the new code to the server
     if (socket) {
       socket.emit("code", { sessionId, code: newCode });
     }

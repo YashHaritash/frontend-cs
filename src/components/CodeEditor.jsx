@@ -17,21 +17,15 @@ const CodeEditor = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Async function to handle socket connection and fetching session data
     const fetchSessionData = async () => {
       try {
         const newSocket = io("http://localhost:3000");
         setSocket(newSocket);
-
-        // Join the session room
         newSocket.emit("joinSession", sessionId);
-
-        // Listen for code updates from the server
         newSocket.on("code", (updatedCode) => {
           setCode(updatedCode);
         });
 
-        // Get session details
         const response = await axios.get(
           `http://localhost:3000/session/details/${sessionId}`,
           {
@@ -39,12 +33,9 @@ const CodeEditor = () => {
             withCredentials: true,
           }
         );
-
-        // Handle the response
         const sessionDetails = response.data;
         setSession(sessionDetails);
 
-        // Get the code for the session
         const codeResponse = await axios.get(
           `http://localhost:3000/code/getCode/${sessionDetails._id}`,
           {
@@ -52,7 +43,6 @@ const CodeEditor = () => {
             withCredentials: true,
           }
         );
-
         setCode(codeResponse.data.code);
       } catch (error) {
         console.error("Error fetching session data:", error);
@@ -80,30 +70,27 @@ const CodeEditor = () => {
     const originalConsoleLog = console.log;
     const originalConsoleError = console.error;
 
-    // Override console.log to capture messages
     console.log = (message) => {
       logMessages.push(`Log: ${message}`);
       originalConsoleLog(message);
     };
 
-    // Override console.error to capture error messages
     console.error = (message) => {
       logMessages.push(`Error: ${message}`);
       originalConsoleError(message);
     };
 
     try {
-      const result = new Function(code)(); // Run code from AceEditor
+      const result = new Function(code)();
       if (result !== undefined) {
         logMessages.push(`Result: ${result}`);
       }
     } catch (error) {
-      logMessages.push(`Error caught: ${error.message}`); // Log errors
+      logMessages.push(`Error caught: ${error.message}`);
     } finally {
-      // Update output with log messages
       setOutput(logMessages.join("\n"));
-      console.log = originalConsoleLog; // Restore original console.log
-      console.error = originalConsoleError; // Restore original console.error
+      console.log = originalConsoleLog;
+      console.error = originalConsoleError;
     }
   };
 
@@ -111,9 +98,7 @@ const CodeEditor = () => {
     try {
       await axios.put(
         `http://localhost:3000/code/update/${session._id}`,
-        {
-          code,
-        },
+        { code },
         {
           headers: { Authorization: token },
           withCredentials: true,
@@ -124,6 +109,18 @@ const CodeEditor = () => {
       console.error("Error saving code:", error);
       toast.error("Error saving code. Please try again.");
     }
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(code)
+      .then(() => {
+        toast.success("Code copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Error copying code:", err);
+        toast.error("Failed to copy code. Please try again.");
+      });
   };
 
   return (
@@ -147,6 +144,9 @@ const CodeEditor = () => {
         </button>
         <button onClick={handleSave} style={styles.saveButton}>
           Save
+        </button>
+        <button onClick={handleCopy} style={styles.copyButton} className="mx-2">
+          Copy Code
         </button>
       </div>
       <div style={styles.outputContainer}>
@@ -194,6 +194,16 @@ const styles = {
   saveButton: {
     padding: "10px 20px",
     backgroundColor: "#2196F3",
+    color: "#fff",
+    fontSize: "1em",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    transition: "background-color 0.3s",
+  },
+  copyButton: {
+    padding: "10px 20px",
+    backgroundColor: "#FFC107",
     color: "#fff",
     fontSize: "1em",
     border: "none",

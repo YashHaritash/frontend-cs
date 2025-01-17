@@ -11,23 +11,26 @@ const SessionManagement = () => {
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:3000/session/getSessions/${userId}`,
-          {
-            headers: { Authorization: token },
-            withCredentials: true,
-          }
-        );
-        setSessions(response.data);
-      } catch (error) {
-        console.error("Error fetching sessions:", error);
-      }
-    };
-
-    fetchSessions();
+    if (!userId) {
+      navigate("/login");
+    } else {
+      const fetchSessions = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await axios.get(
+            `http://localhost:3000/session/getSessions/${userId}`,
+            {
+              headers: { Authorization: token },
+              withCredentials: true,
+            }
+          );
+          setSessions(response.data);
+        } catch (error) {
+          console.error("Error fetching sessions:", error);
+        }
+      };
+      fetchSessions();
+    }
   }, [userId]);
 
   const onCreateSession = async () => {

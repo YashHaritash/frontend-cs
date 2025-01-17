@@ -35,6 +35,7 @@ const Signup = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("name", data.name);
+      localStorage.setItem("userId", data.id);
       navigate("/");
     } catch (error) {
       console.log(error);

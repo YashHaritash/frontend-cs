@@ -36,17 +36,20 @@ const CodeEditor = () => {
   };
 
   return (
-    <AceEditor
-      mode="javascript"
-      theme="monokai"
-      value={code}
-      onChange={handleCodeChange}
-      name="code-editor"
-      editorProps={{ $blockScrolling: true }}
-      setOptions={{ useWorker: false }}
-      width="100%"
-      height="500px"
-    />
+    <>
+      <h3>Session Id - {sessionId} </h3>
+      <AceEditor
+        mode="javascript"
+        theme="monokai"
+        value={code}
+        onChange={handleCodeChange}
+        name="code-editor"
+        editorProps={{ $blockScrolling: true }}
+        setOptions={{ useWorker: false }}
+        width="100%"
+        height="500px"
+      />
+    </>
   );
 };
 

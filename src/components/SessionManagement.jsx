@@ -30,9 +30,26 @@ const SessionManagement = () => {
     fetchSessions();
   }, [userId]);
 
-  const onCreateSession = () => {
+  const onCreateSession = async () => {
     console.log("Creating new session...");
-    navigate(`/editor/${sessionId}`);
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:3000/session/create",
+        { creator: userId },
+        {
+          headers: { Authorization: token },
+          withCredentials: true,
+        }
+      );
+
+      const newSessionId = response.data.sessionId; // Correctly access the sessionId
+      setSessionId(newSessionId); // Update the state with the new sessionId
+      navigate(`/editor/${newSessionId}`); // Navigate using the new sessionId
+    } catch (error) {
+      console.log("Error creating session:", error);
+    }
   };
 
   const handleJoinSession = async () => {

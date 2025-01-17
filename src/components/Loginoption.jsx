@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Loginoption() {
   // Capitalize the first letter of each word in a string
@@ -18,6 +19,7 @@ function Loginoption() {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("userId");
+    toast.success("Logged out successfully!");
     navigate("/login");
   };
 

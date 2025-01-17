@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -36,8 +37,10 @@ const Signup = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("name", data.name);
       localStorage.setItem("userId", data.id);
+      toast.success("Signup successful!");
       navigate("/");
     } catch (error) {
+      toast.error("Error signing up");
       console.log(error);
     }
   };

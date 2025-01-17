@@ -6,7 +6,7 @@ import SessionManagement from "./components/SessionManagement";
 import CodeEditor from "./components/CodeEditor";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import Loginoption from "./components/Loginoption";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   // Define onCreateSession function in App.js
@@ -28,6 +28,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/editor/:sessionId" element={<CodeEditor />} />
       </Routes>
+      <ToastContainer />
     </Router>
   );
 }

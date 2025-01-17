@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
-
+import { toast } from "react-toastify";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
@@ -119,8 +119,10 @@ const CodeEditor = () => {
           withCredentials: true,
         }
       );
+      toast.success("Code saved successfully!");
     } catch (error) {
       console.error("Error saving code:", error);
+      toast.error("Error saving code. Please try again.");
     }
   };
 

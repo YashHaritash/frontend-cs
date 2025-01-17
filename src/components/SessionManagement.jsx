@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 const SessionManagement = () => {
@@ -49,8 +50,10 @@ const SessionManagement = () => {
 
       const newSessionId = response.data.sessionId; // Correctly access the sessionId
       setSessionId(newSessionId); // Update the state with the new sessionId
+      toast.success("Session created successfully!");
       navigate(`/editor/${newSessionId}`); // Navigate using the new sessionId
     } catch (error) {
+      toast.error("Error creating session");
       console.log("Error creating session:", error);
     }
   };
@@ -67,13 +70,16 @@ const SessionManagement = () => {
         }
       );
       console.log("Joined session:", response.data);
+      toast.success("Joined session successfully!");
       navigate(`/editor/${sessionId}`);
     } catch (error) {
+      toast.error("Error joining session");
       console.error("Error joining session:", error);
     }
   };
 
   const handleJoinExistingSession = (sessionId) => {
+    toast.success("Joined session successfully!");
     navigate(`/editor/${sessionId}`);
   };
 

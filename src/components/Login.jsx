@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -34,8 +35,10 @@ const Login = () => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("name", data.name);
       localStorage.setItem("userId", data.id);
+      toast.success("Login successful!");
       navigate("/");
     } catch (error) {
+      toast.error("Invalid email or password");
       console.log(error);
     }
   };

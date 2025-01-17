@@ -17,6 +17,7 @@ function Loginoption() {
   const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("name");
+    localStorage.removeItem("userId");
     navigate("/login");
   };
 
@@ -29,13 +30,13 @@ function Loginoption() {
         <span className="text-white">Hello </span>
         <span className="text-limegreen">{capitalize(name)}</span>
       </div>
-      <Link
+      <button
         type="button"
         className="btn btn-outline-danger mx-2 border-2"
         onClick={handleSignOut}
       >
         LogOut
-      </Link>
+      </button>
     </>
   ) : (
     <>

@@ -107,8 +107,21 @@ const CodeEditor = () => {
     }
   };
 
-  const handleSave = () => {
-    alert("Code saved! (This is a dummy action for now)");
+  const handleSave = async () => {
+    try {
+      await axios.put(
+        `http://localhost:3000/code/update/${session._id}`,
+        {
+          code,
+        },
+        {
+          headers: { Authorization: token },
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.error("Error saving code:", error);
+    }
   };
 
   return (

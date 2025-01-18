@@ -1,8 +1,20 @@
-# React + Vite
+# About CodeSync
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CodeSync is a collaborative coding platform that allows developers to work together in real-time on coding projects. It provides an intuitive environment for real-time collaboration, supporting multiple programming languages and secure session management.
 
-Currently, two official plugins are available:
+## What is CodeSync?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+CodeSync is a real-time collaborative platform designed for developers to collaborate, code, and learn together. With CodeSync, you can start a new session, invite your team, and work on code in multiple languages in a shared environment.
+
+## Features
+
+- **Real-time collaboration**: Work on code together instantly.
+- **Multiple language support**: Supports C, C++, JavaScript, Python, and Java.
+- **Session management**: Create, join, or leave sessions with unique IDs.
+- **Secure and private**: Sessions are protected with JWT authentication.
+
+## How it Works
+
+Simply log in, create or join a session, and start coding! Whether you're working with a team or learning new concepts, CodeSync makes real-time collaboration easy and efficient.
+
+

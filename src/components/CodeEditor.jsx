@@ -104,6 +104,15 @@ const CodeEditor = () => {
         setOutput(logMessages.join("\n"));
         console.log = originalConsoleLog;
       }
+    } else if (language === "python") {
+      try {
+        const response = await axios.post("http://localhost:3000/run-python", {
+          code,
+        });
+        setOutput(response.data.output || "No output");
+      } catch (error) {
+        setOutput(error.response?.data?.error || "Error running code");
+      }
     } else {
       setOutput("Run functionality for this language is not implemented yet.");
     }

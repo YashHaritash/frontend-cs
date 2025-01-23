@@ -232,5 +232,4 @@ const styles = {
     fontFamily: "Courier New, monospace",
   },
 };
-
 export default CodeEditor;

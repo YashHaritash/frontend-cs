@@ -162,7 +162,7 @@ const CodeEditor = () => {
       <div className="d-flex justify-content-center">
         <button
           type="button"
-          class="btn btn-primary my-1 px-4"
+          className="btn btn-primary my-1 px-4"
           onClick={() => {
             navigator.clipboard
               .writeText(sessionId)

@@ -113,6 +113,15 @@ const CodeEditor = () => {
       } catch (error) {
         setOutput(error.response?.data?.error || "Error running code");
       }
+    } else if (language === "c") {
+      try {
+        const response = await axios.post("http://localhost:3000/run-c", {
+          code,
+        });
+        setOutput(response.data.output || "No output");
+      } catch (error) {
+        setOutput(error.response?.data?.error || "Error running code");
+      }
     } else {
       setOutput("Run functionality for this language is not implemented yet.");
     }
@@ -149,7 +158,26 @@ const CodeEditor = () => {
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.header}>Session Id - {sessionId}</h3>
+      {/* <h3 style={styles.header}></h3> */}
+      <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          class="btn btn-primary my-1 px-4"
+          onClick={() => {
+            navigator.clipboard
+              .writeText(sessionId)
+              .then(() => {
+                toast.success("Session Id copied to clipboard!");
+              })
+              .catch((err) => {
+                console.error("Error copying session id:", err);
+                toast.error("Failed to copy session id. Please try again.");
+              });
+          }}
+        >
+          Session Id - {sessionId}
+        </button>
+      </div>
       <div className="mb-3">
         <label htmlFor="language" className="form-label">
           Language:
@@ -163,11 +191,11 @@ const CodeEditor = () => {
           <option value="javascript">JavaScript</option>
           <option value="c_cpp">C++</option>
           <option value="python">Python</option>
+          <option value="c">C</option>
         </select>
       </div>
-
       <AceEditor
-        mode={language}
+        mode={language == "c" ? "c_cpp" : language}
         theme="monokai"
         value={code}
         onChange={handleCodeChange}

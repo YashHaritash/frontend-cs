@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 import { toast } from "react-toastify";
 import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
 
@@ -13,6 +15,7 @@ const CodeEditor = () => {
   const [session, setSession] = useState(null);
   const [socket, setSocket] = useState(null);
   const [output, setOutput] = useState("");
+  const [language, setLanguage] = useState("javascript"); // State for selected language
 
   const token = localStorage.getItem("token");
 
@@ -65,32 +68,44 @@ const CodeEditor = () => {
     }
   };
 
-  const handleRunCode = () => {
-    const logMessages = [];
-    const originalConsoleLog = console.log;
-    const originalConsoleError = console.error;
+  const handleLanguageChange = (event) => {
+    setLanguage(event.target.value); // Update selected language
+    setOutput(""); // Clear output when language changes
+  };
 
-    console.log = (message) => {
-      logMessages.push(`Log: ${message}`);
-      originalConsoleLog(message);
-    };
-
-    console.error = (message) => {
-      logMessages.push(`Error: ${message}`);
-      originalConsoleError(message);
-    };
-
-    try {
-      const result = new Function(code)();
-      if (result !== undefined) {
-        logMessages.push(`Result: ${result}`);
+  const handleRunCode = async () => {
+    if (language === "c_cpp") {
+      try {
+        const response = await axios.post("http://localhost:3000/run-cpp", {
+          code,
+        });
+        setOutput(response.data.output || "No output");
+      } catch (error) {
+        setOutput(error.response?.data?.error || "Error running code");
       }
-    } catch (error) {
-      logMessages.push(`Error caught: ${error.message}`);
-    } finally {
-      setOutput(logMessages.join("\n"));
-      console.log = originalConsoleLog;
-      console.error = originalConsoleError;
+    } else if (language === "javascript") {
+      // Existing JavaScript execution logic
+      const logMessages = [];
+      const originalConsoleLog = console.log;
+
+      console.log = (message) => {
+        logMessages.push(`Log: ${message}`);
+        originalConsoleLog(message);
+      };
+
+      try {
+        const result = new Function(code)();
+        if (result !== undefined) {
+          logMessages.push(`Result: ${result}`);
+        }
+      } catch (error) {
+        logMessages.push(`Error caught: ${error.message}`);
+      } finally {
+        setOutput(logMessages.join("\n"));
+        console.log = originalConsoleLog;
+      }
+    } else {
+      setOutput("Run functionality for this language is not implemented yet.");
     }
   };
 
@@ -126,8 +141,24 @@ const CodeEditor = () => {
   return (
     <div style={styles.container}>
       <h3 style={styles.header}>Session Id - {sessionId}</h3>
+      <div className="mb-3">
+        <label htmlFor="language" className="form-label">
+          Language:
+        </label>
+        <select
+          id="language"
+          value={language}
+          onChange={handleLanguageChange}
+          className="form-select"
+        >
+          <option value="javascript">JavaScript</option>
+          <option value="c_cpp">C++</option>
+          <option value="python">Python</option>
+        </select>
+      </div>
+
       <AceEditor
-        mode="javascript"
+        mode={language}
         theme="monokai"
         value={code}
         onChange={handleCodeChange}
@@ -232,4 +263,5 @@ const styles = {
     fontFamily: "Courier New, monospace",
   },
 };
+
 export default CodeEditor;

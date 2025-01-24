@@ -122,6 +122,15 @@ const CodeEditor = () => {
       } catch (error) {
         setOutput(error.response?.data?.error || "Error running code");
       }
+    } else if (language === "java") {
+      try {
+        const response = await axios.post("http://localhost:3000/run-java", {
+          code,
+        });
+        setOutput(response.data.output || "No output");
+      } catch (error) {
+        setOutput(error.response?.data?.error || "Error running code");
+      }
     } else {
       setOutput("Run functionality for this language is not implemented yet.");
     }
@@ -192,6 +201,7 @@ const CodeEditor = () => {
           <option value="c_cpp">C++</option>
           <option value="python">Python</option>
           <option value="c">C</option>
+          <option value="java">Java</option>
         </select>
       </div>
       <AceEditor

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import GoogleAuth from "./GoogleAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -117,6 +118,7 @@ const Login = () => {
           >
             Login
           </button>
+          <GoogleAuth />
         </form>
       </div>
     </div>

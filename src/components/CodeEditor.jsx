@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import AceEditor from "react-ace";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import io from "socket.io-client";
 import { toast } from "react-toastify";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -8,6 +8,7 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
+
 
 const CodeEditor = () => {
   const { sessionId } = useParams();
@@ -18,6 +19,30 @@ const CodeEditor = () => {
   const [language, setLanguage] = useState("javascript"); // State for selected language
 
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  const handleLeaveSession = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId");
+      console.log(userId);
+      console.log(session._id);
+
+      await fetch(`http://localhost:3000/session/leave`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+        body: JSON.stringify({ sessionId: session._id, userId }),
+      });
+      toast.success("Left session successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Error leaving session");
+      console.error("Error leaving session:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchSessionData = async () => {
@@ -169,6 +194,14 @@ const CodeEditor = () => {
     <div style={styles.container}>
       {/* <h3 style={styles.header}></h3> */}
       <div className="d-flex justify-content-center">
+        <button
+          type="button"
+          className="btn btn-danger"
+          onClick={handleLeaveSession}
+          style={{ position: "absolute", top: 70, right: 70 }}
+        >
+          X
+        </button>
         <button
           type="button"
           className="btn btn-primary my-1 px-4"

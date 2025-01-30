@@ -61,6 +61,27 @@ const SessionManagement = () => {
   const handleJoinSession = async () => {
     try {
       const token = localStorage.getItem("token");
+      const sessionResponse = await axios.get(
+        `http://localhost:3000/session/details/${sessionId}`,
+        {
+          headers: { Authorization: token },
+          withCredentials: true,
+        }
+      );
+
+      const sessionDetails = sessionResponse.data;
+      const uniqueParticipants = new Set(sessionDetails.participants);
+
+      if (uniqueParticipants.size >= 10) {
+        toast.error("Session is full. Maximum 10 users allowed.");
+        return;
+      }
+
+      if (uniqueParticipants.has(userId)) {
+        toast.error("You are already in this session.");
+        return;
+      }
+
       const response = await axios.post(
         "http://localhost:3000/session/join",
         { sessionId },

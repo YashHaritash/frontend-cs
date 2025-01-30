@@ -8,9 +8,10 @@ import "ace-builds/src-noconflict/mode-c_cpp";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
-
+import m from "ace-builds/src-noconflict/mode-javascript";
 
 const CodeEditor = () => {
+  const [mySet, setMySet] = useState(new Set());
   const { sessionId } = useParams();
   const [code, setCode] = useState("");
   const [session, setSession] = useState(null);
@@ -53,7 +54,44 @@ const CodeEditor = () => {
         newSocket.on("code", (updatedCode) => {
           setCode(updatedCode);
         });
+        // Store the last typing timestamp for each user
+        const typingTimestamps = new Map();
 
+        newSocket.on("name", (name) => {
+          console.log("Name:", name);
+
+          // Add the name to the set if it's not already there
+          setMySet((prevSet) => {
+            const newSet = new Set(prevSet);
+            newSet.add(name);
+            return newSet;
+          });
+
+          // Update the typing timestamp whenever the user types
+          typingTimestamps.set(name, Date.now());
+
+          // Periodically check for users who haven't typed in the last 5 seconds
+          const intervalId = setInterval(() => {
+            const currentTime = Date.now();
+
+            typingTimestamps.forEach((timestamp, userName) => {
+              // If the user hasn't typed in the last 5 seconds, remove them from the set
+              if (currentTime - timestamp > 5000) {
+                setMySet((prevSet) => {
+                  const newSet = new Set(prevSet);
+                  newSet.delete(userName);
+                  return newSet;
+                });
+                typingTimestamps.delete(userName); // Remove user from timestamp tracking
+              }
+            });
+          }, 5000);
+
+          // Clear the interval when the socket disconnects or stops using typing signals
+          newSocket.on("disconnect", () => {
+            clearInterval(intervalId);
+          });
+        });
         const response = await axios.get(
           `http://localhost:3000/session/details/${sessionId}`,
           {
@@ -88,8 +126,9 @@ const CodeEditor = () => {
 
   const handleCodeChange = (newCode) => {
     setCode(newCode);
+    const name = localStorage.getItem("name");
     if (socket) {
-      socket.emit("code", { sessionId, code: newCode });
+      socket.emit("code", { sessionId, code: newCode, name });
     }
   };
 
@@ -190,6 +229,8 @@ const CodeEditor = () => {
       });
   };
 
+  const numberOfUsers = mySet.size;
+
   return (
     <div style={styles.container}>
       {/* <h3 style={styles.header}></h3> */}
@@ -237,6 +278,26 @@ const CodeEditor = () => {
           <option value="java">Java</option>
         </select>
       </div>
+      <div className="d-flex justify-content-center mb-3">
+        <div className="d-flex align-items-center">
+          {Array.from(mySet).map((name) => (
+            <span key={name + " "} className="badge bg-secondary me-2">
+              {name}
+            </span>
+          ))}
+
+          {/* Ensure the space is always there to prevent layout shift */}
+          <span className="ms-2">
+            {numberOfUsers === 0 ? (
+              <span>&nbsp;</span> // Render a non-breaking space if no users are typing
+            ) : numberOfUsers === 1 ? (
+              "is typing"
+            ) : (
+              "are typing"
+            )}
+          </span>
+        </div>
+      </div>
       <AceEditor
         mode={language == "c" ? "c_cpp" : language}
         theme="monokai"
@@ -249,6 +310,7 @@ const CodeEditor = () => {
         height="500px"
         style={styles.editor}
       />
+
       <div style={styles.buttonContainer}>
         <button onClick={handleRunCode} style={styles.runButton}>
           Run Code

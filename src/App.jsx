@@ -6,7 +6,8 @@ import SessionManagement from "./components/SessionManagement";
 import CodeEditor from "./components/CodeEditor";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
+import ForgetPassword from "./components/ForgetPassword";
 
 function App() {
   // Define onCreateSession function in App.js
@@ -24,6 +25,7 @@ function App() {
           element={<SessionManagement onCreateSession={onCreateSession} />}
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/reset" element={<ForgetPassword />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/about" element={<About />} />
         <Route path="/editor/:sessionId" element={<CodeEditor />} />

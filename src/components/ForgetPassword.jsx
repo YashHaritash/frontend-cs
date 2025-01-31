@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import GoogleAuth from "./GoogleAuth";
-const Login = () => {
+
+const ForgetPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const navigate = useNavigate();
@@ -15,30 +14,27 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Email:", email, "Password:", password);
+    console.log("Email:", email);
     try {
-      const payload = {
-        email,
-        password,
-      };
-      const response = await fetch(`http://localhost:3000/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+      const payload = { email };
+      const response = await fetch(
+        `http://localhost:3000/auth/forgot-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await response.json();
       console.log(data);
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("name", data.name);
-      localStorage.setItem("userId", data.id);
-      toast.success("Login successful!");
-      navigate("/");
+      //   toast.success("Password reset link sent to your email!");
+      //   navigate("/login");
     } catch (error) {
-      toast.error("Invalid email or password");
+      toast.error("Error sending reset link");
       console.log(error);
     }
   };
@@ -71,35 +67,15 @@ const Login = () => {
           color: theme.color,
         }}
       >
-        <h2 className="text-center mb-4">Login</h2>
-        {/* <button
-          onClick={toggleDarkMode}
-          className="btn btn-secondary mb-3"
-        >
-          Toggle {isDarkMode ? "Light" : "Dark"} Mode
-        </button> */}
+        <h2 className="text-center mb-4">Forgot Password</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input
               type="email"
               className="form-control"
-              placeholder="Email"
+              placeholder="Enter your email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{
-                backgroundColor: isDarkMode ? "gray" : "#fff",
-                color: theme.color,
-              }}
-            />
-          </div>
-          <div className="mb-3">
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               required
               style={{
                 backgroundColor: isDarkMode ? "gray" : "#fff",
@@ -115,16 +91,14 @@ const Login = () => {
               borderColor: isDarkMode ? "#bb86fc" : "#007bff",
             }}
           >
-            Login
+            Submit
           </button>
-          <GoogleAuth />
         </form>
-
         <div className="mt-3 text-center">
           <p>
-            Forgot Password?{" "}
+            Remembered your password?{" "}
             <Link
-              to="/reset"
+              to="/login"
               style={{ color: isDarkMode ? "#bb86fc" : "#007bff" }}
             >
               Login here
@@ -136,4 +110,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;

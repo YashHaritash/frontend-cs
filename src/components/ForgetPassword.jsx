@@ -30,9 +30,8 @@ const ForgetPassword = () => {
 
       const data = await response.json();
       console.log(data);
-
-      //   toast.success("Password reset link sent to your email!");
-      //   navigate("/login");
+      toast.success("Password reset link sent to your email!");
+      navigate("/login");
     } catch (error) {
       toast.error("Error sending reset link");
       console.log(error);

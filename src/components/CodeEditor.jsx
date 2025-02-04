@@ -9,6 +9,7 @@ import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
 import m from "ace-builds/src-noconflict/mode-javascript";
+import ChatBox from "./ChatBox";
 
 const CodeEditor = () => {
   const [mySet, setMySet] = useState(new Set());
@@ -234,12 +235,13 @@ const CodeEditor = () => {
   return (
     <div style={styles.container}>
       {/* <h3 style={styles.header}></h3> */}
+      <ChatBox sessionId={sessionId} />
       <div className="d-flex justify-content-center">
         <button
           type="button"
           className="btn btn-danger"
           onClick={handleLeaveSession}
-          style={{ position: "absolute", top: 70, right: 70 }}
+          style={{ position: "absolute", top: 70, right: 20 }}
         >
           X
         </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BsChatDots } from "react-icons/bs";
+import { BsChatDots, BsMicFill } from "react-icons/bs";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:3000", {
@@ -11,6 +11,8 @@ const ChatBox = ({ sessionId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [recording, setRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
 
   const name = localStorage.getItem("name") || "Anonymous";
 
@@ -35,10 +37,53 @@ const ChatBox = ({ sessionId }) => {
   const sendMessage = () => {
     if (message.trim() === "" || !sessionId) return;
 
-    const chatMessage = { name, message, sessionId };
-    socket.emit("chat", chatMessage); // Let the server broadcast it
+    const chatMessage = { name, message, type: "text", sessionId };
+    socket.emit("chat", chatMessage);
 
-    setMessage(""); // Clear input field
+    setMessage("");
+  };
+
+  // 🎤 Start Recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      let chunks = [];
+
+      recorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          const base64Audio = reader.result; // Converts to Base64
+          const audioMessage = {
+            name,
+            message: base64Audio,
+            type: "audio",
+            sessionId,
+          };
+          socket.emit("chat", audioMessage);
+        };
+      };
+
+      setMediaRecorder(recorder);
+      recorder.start();
+      setRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+    }
+  };
+
+  // 🛑 Stop Recording
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setRecording(false);
+    }
   };
 
   return (
@@ -77,7 +122,16 @@ const ChatBox = ({ sessionId }) => {
         >
           {messages.map((msg, index) => (
             <div key={index} className="mb-2">
-              <strong>{msg.name}:</strong> {msg.message}
+              <strong>{msg.name}:</strong>{" "}
+              {msg.type === "audio" &&
+              msg.message.startsWith("data:audio/webm") ? (
+                <audio controls>
+                  <source src={msg.message} type="audio/webm" />
+                  Your browser does not support the audio element.
+                </audio>
+              ) : (
+                msg.message
+              )}
             </div>
           ))}
         </div>
@@ -93,6 +147,18 @@ const ChatBox = ({ sessionId }) => {
           />
           <button className="btn btn-success ms-2" onClick={sendMessage}>
             Send
+          </button>
+        </div>
+
+        <div className="d-flex mt-2">
+          <button
+            className={`btn ${
+              recording ? "btn-danger" : "btn-secondary"
+            } w-100`}
+            onClick={recording ? stopRecording : startRecording}
+          >
+            <BsMicFill size={20} />{" "}
+            {recording ? "Stop Recording" : "Record Audio"}
           </button>
         </div>
       </div>

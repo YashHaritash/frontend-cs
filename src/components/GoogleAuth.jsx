@@ -6,26 +6,13 @@ function GoogleAuth() {
   const navigate = useNavigate();
   const handleSuccess = async (response) => {
     console.log(response);
-    const decoded = jwtDecode(response.credential);
-    console.log(decoded);
-    const name = decoded.name;
-    const email = decoded.email;
-    const password = decoded.jti;
+    const token = response.credential;
 
-    let user = await fetch("http://localhost:3000/auth/login", {
+    let user = await fetch("http://localhost:3000/auth/google", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ token }),
     });
-
-    if (user.status === 404) {
-      const newUser = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
-      user = newUser;
-    }
 
     const data = await user.json();
 

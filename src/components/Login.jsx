@@ -86,6 +86,7 @@ const Login = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              minLength={4}
               required
               style={{
                 backgroundColor: isDarkMode ? "gray" : "#fff",
@@ -100,6 +101,7 @@ const Login = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              minLength={4}
               required
               style={{
                 backgroundColor: isDarkMode ? "gray" : "#fff",

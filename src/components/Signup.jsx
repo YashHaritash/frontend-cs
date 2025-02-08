@@ -89,6 +89,7 @@ const Signup = () => {
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              minLength={4}
               required
               style={{
                 backgroundColor: isDarkMode ? "gray" : "#fff",
@@ -103,6 +104,7 @@ const Signup = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              minLength={4}
               required
               style={{
                 backgroundColor: isDarkMode ? "gray" : "#fff",
@@ -117,6 +119,7 @@ const Signup = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              minLength={4}
               required
               style={{
                 backgroundColor: isDarkMode ? "#2e2e2e" : "#fff",

@@ -10,6 +10,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import axios from "axios";
 import m from "ace-builds/src-noconflict/mode-javascript";
 import ChatBox from "./ChatBox";
+import styles from "./CodeEditorStyle";
 
 const CodeEditor = () => {
   const [mySet, setMySet] = useState(new Set());
@@ -332,80 +333,6 @@ const CodeEditor = () => {
   );
 };
 
-const styles = {
-  container: {
-    width: "100%",
-    margin: "0",
-    padding: "20px",
-    backgroundColor: "#1e1e1e",
-    color: "#fff",
-    fontFamily: "Arial, sans-serif",
-  },
-  header: {
-    textAlign: "center",
-    marginBottom: "20px",
-    fontSize: "1.5em",
-  },
-  editor: {
-    borderRadius: "8px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-    marginBottom: "20px",
-  },
-  buttonContainer: {
-    textAlign: "center",
-    marginTop: "20px",
-  },
-  runButton: {
-    padding: "10px 20px",
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    fontSize: "1em",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-    marginRight: "10px",
-  },
-  saveButton: {
-    padding: "10px 20px",
-    backgroundColor: "#2196F3",
-    color: "#fff",
-    fontSize: "1em",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-  },
-  copyButton: {
-    padding: "10px 20px",
-    backgroundColor: "#FFC107",
-    color: "#fff",
-    fontSize: "1em",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    transition: "background-color 0.3s",
-  },
-  outputContainer: {
-    marginTop: "30px",
-    backgroundColor: "#2a2a2a",
-    padding: "15px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-  },
-  outputHeader: {
-    color: "#e5e5e5",
-    marginBottom: "10px",
-  },
-  output: {
-    backgroundColor: "#1e1e1e",
-    color: "#e5e5e5",
-    padding: "15px",
-    borderRadius: "8px",
-    whiteSpace: "pre-wrap",
-    wordWrap: "break-word",
-    fontFamily: "Courier New, monospace",
-  },
-};
+// export default styles;
 
 export default CodeEditor;

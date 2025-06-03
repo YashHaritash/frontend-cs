@@ -12,6 +12,9 @@ import m from "ace-builds/src-noconflict/mode-javascript";
 import ChatBox from "./ChatBox";
 import styles from "./CodeEditorStyle";
 
+const API_URL = import.meta.env.VITE_API_URL;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+
 const CodeEditor = () => {
   const [mySet, setMySet] = useState(new Set());
   const { sessionId } = useParams();
@@ -31,7 +34,7 @@ const CodeEditor = () => {
       console.log(userId);
       console.log(session._id);
 
-      await fetch(`http://localhost:3000/session/leave`, {
+      await fetch(`${API_URL}/session/leave`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +53,7 @@ const CodeEditor = () => {
   useEffect(() => {
     const fetchSessionData = async () => {
       try {
-        const newSocket = io("http://localhost:3000");
+        const newSocket = io(SOCKET_URL);
         setSocket(newSocket);
         newSocket.emit("joinSession", sessionId);
         newSocket.on("code", (updatedCode) => {
@@ -95,7 +98,7 @@ const CodeEditor = () => {
           });
         });
         const response = await axios.get(
-          `http://localhost:3000/session/details/${sessionId}`,
+          `${API_URL}/session/details/${sessionId}`,
           {
             headers: { Authorization: token },
             withCredentials: true,
@@ -105,7 +108,7 @@ const CodeEditor = () => {
         setSession(sessionDetails);
 
         const codeResponse = await axios.get(
-          `http://localhost:3000/code/getCode/${sessionDetails._id}`,
+          `${API_URL}/code/getCode/${sessionDetails._id}`,
           {
             headers: { Authorization: token },
             withCredentials: true,
@@ -142,7 +145,7 @@ const CodeEditor = () => {
   const handleRunCode = async () => {
     if (language === "c_cpp") {
       try {
-        const response = await axios.post("http://localhost:3000/run-cpp", {
+        const response = await axios.post(`${API_URL}/run-cpp`, {
           code,
         });
         setOutput(response.data.output || "No output");
@@ -172,7 +175,7 @@ const CodeEditor = () => {
       }
     } else if (language === "python") {
       try {
-        const response = await axios.post("http://localhost:3000/run-python", {
+        const response = await axios.post(`${API_URL}/run-python`, {
           code,
         });
         setOutput(response.data.output || "No output");
@@ -181,7 +184,7 @@ const CodeEditor = () => {
       }
     } else if (language === "c") {
       try {
-        const response = await axios.post("http://localhost:3000/run-c", {
+        const response = await axios.post(`${API_URL}/run-c`, {
           code,
         });
         setOutput(response.data.output || "No output");
@@ -190,7 +193,7 @@ const CodeEditor = () => {
       }
     } else if (language === "java") {
       try {
-        const response = await axios.post("http://localhost:3000/run-java", {
+        const response = await axios.post(`${API_URL}/run-java`, {
           code,
         });
         setOutput(response.data.output || "No output");
@@ -205,7 +208,7 @@ const CodeEditor = () => {
   const handleSave = async () => {
     try {
       await axios.put(
-        `http://localhost:3000/code/update/${session._id}`,
+        `${API_URL}/code/update/${session._id}`,
         { code },
         {
           headers: { Authorization: token },

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -17,16 +19,13 @@ const ForgetPassword = () => {
     console.log("Email:", email);
     try {
       const payload = { email };
-      const response = await fetch(
-        `http://localhost:3000/auth/forgot-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
       const data = await response.json();
       console.log(data);

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const SessionManagement = () => {
   const [sessionId, setSessionId] = useState("");
   const [sessions, setSessions] = useState([]);
@@ -19,7 +21,7 @@ const SessionManagement = () => {
         try {
           const token = localStorage.getItem("token");
           const response = await axios.get(
-            `http://localhost:3000/session/getSessions/${userId}`,
+            `${API_URL}/session/getSessions/${userId}`,
             {
               headers: { Authorization: token },
               withCredentials: true,
@@ -40,7 +42,7 @@ const SessionManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/session/create",
+        `${API_URL}/session/create`,
         { creator: userId },
         {
           headers: { Authorization: token },
@@ -62,7 +64,7 @@ const SessionManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const sessionResponse = await axios.get(
-        `http://localhost:3000/session/details/${sessionId}`,
+        `${API_URL}/session/details/${sessionId}`,
         {
           headers: { Authorization: token },
           withCredentials: true,
@@ -83,7 +85,7 @@ const SessionManagement = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/session/join",
+        `${API_URL}/session/join`,
         { sessionId },
         {
           headers: { Authorization: token },
@@ -103,7 +105,7 @@ const SessionManagement = () => {
     try {
       const token = localStorage.getItem("token");
       const sessionResponse = await axios.get(
-        `http://localhost:3000/session/details/${sessionId}`,
+        `${API_URL}/session/details/${sessionId}`,
         {
           headers: { Authorization: token },
           withCredentials: true,
@@ -124,7 +126,7 @@ const SessionManagement = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/session/join",
+        `${API_URL}/session/join`,
         { sessionId },
         {
           headers: { Authorization: token },

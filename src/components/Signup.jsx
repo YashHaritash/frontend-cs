@@ -24,7 +24,7 @@ const Signup = () => {
         email,
         password,
       };
-      const response = await fetch(`http://localhost:3000/auth/signup`, {
+      const response = await fetch(`${API_URL}/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

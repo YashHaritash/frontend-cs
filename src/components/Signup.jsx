@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import GoogleAuth from "./GoogleAuth";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
